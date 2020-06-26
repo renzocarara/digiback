@@ -23,13 +23,15 @@ class ResultController extends Controller
      */
     public function index()
     {
+        // lego yuyyo il DB
         $allResults = Result::all();
+        // conto le righe della tabella
         $total_number_of_results = $allResults->count();
 
         // imposto la paginazione automatica di Laravel - 5 elementi per pagina
         $allResults = Result::paginate(5);
 
-        // ritorno una view con con una collection di risultati da visualizzare
+        // ritorno una view con con una collection di risultati da visualizzare e la quantità
         return view('index', ['results' => $allResults, 'total_results' => $total_number_of_results]);
 
     }

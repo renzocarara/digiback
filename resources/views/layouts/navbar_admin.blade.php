@@ -1,9 +1,10 @@
 <nav class="navbar navbar-expand-md navbar-light bg-white shadow-sm">
     <div class="container">
+        <img style="max-height:38px" class="mr-3" src="/assets/digi_logo_purple_on_trasp.png" alt="digiback logo">
         <a class="navbar-brand" href="{{ url('/') }}">
             {{-- cerca nel file app.php nella cartella 'config', la chiave 'name', --}}
             {{-- e recupera il valore, se non lo trova usa il default specificato nel secondo parametro --}}
-            {{ config('app.name', 'App Laravel anonima') }}
+            {{ config('app.name', 'DigiBack') }}
         </a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="{{ __('Toggle navigation') }}">
             <span class="navbar-toggler-icon"></span>

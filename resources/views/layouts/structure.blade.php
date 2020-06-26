@@ -21,7 +21,7 @@
 
 <body>
     <main>
-        @include('layouts.navbar')
+        @include('layouts.navbar_admin')
         @yield('content')
     </main>
 </body>

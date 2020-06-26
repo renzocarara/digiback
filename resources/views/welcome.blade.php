@@ -1,4 +1,4 @@
-<!-- landing view non autenticata -->
+<!-- landing view non autenticata, cioè la pagina iniziale di atterraggio -->
 <!DOCTYPE html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
     <head>
@@ -9,6 +9,9 @@
 
         <!-- Fonts -->
         <link href="https://fonts.googleapis.com/css?family=Nunito:200,600" rel="stylesheet">
+
+        <!-- favicon -->
+         <link rel="icon" href="/assets/favicon.ico">
 
         <!-- Styles -->
         <style>
@@ -82,18 +85,14 @@
 
             <div class="content">
                 <div class="title m-b-md">
+                    <img src="/assets/digi_logo_purple_on_trasp.png" alt="digiback logo">
                     DigiBack
                 </div>
 
                 <div class="links">
-                    <a href="https://laravel.com/docs">Docs</a>
-                    <a href="https://laracasts.com">Laracasts</a>
-                    <a href="https://laravel-news.com">News</a>
-                    <a href="https://blog.laravel.com">Blog</a>
-                    <a href="https://nova.laravel.com">Nova</a>
-                    <a href="https://forge.laravel.com">Forge</a>
-                    <a href="https://vapor.laravel.com">Vapor</a>
-                    <a href="https://github.com/laravel/laravel">GitHub</a>
+                    <a href="https://digitiamo.com">Digitiamo</a>
+                    <a href="https://laravel.com/">Laravel</a>
+                    <a href="https://github.com/">GitHub</a>
                 </div>
             </div>
         </div>
