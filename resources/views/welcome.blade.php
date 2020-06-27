@@ -90,9 +90,9 @@
                 </div>
 
                 <div class="links">
-                    <a href="https://digitiamo.com">Digitiamo</a>
-                    <a href="https://laravel.com/">Laravel</a>
-                    <a href="https://github.com/">GitHub</a>
+                    <a target="_blank" href="https://digitiamo.com">Digitiamo</a>
+                    <a target="_blank" href="https://laravel.com/">Laravel</a>
+                    <a target="_blank" href="https://github.com/">GitHub</a>
                 </div>
             </div>
         </div>
