@@ -92,7 +92,9 @@
                 <div class="links">
                     <a target="_blank" href="https://digitiamo.com">Digitiamo</a>
                     <a target="_blank" href="https://laravel.com/">Laravel</a>
-                    <a target="_blank" href="https://github.com/">GitHub</a>
+                    <a target="_blank" href="https://github.com/renzocarara/digiback">GitHub</a>
+                    <a target="_blank" href="https://postgresql.org/">PostgreSQL</a>
+                    <a target="_blank" href="https://heroku.com/">Heroku</a>
                 </div>
             </div>
         </div>

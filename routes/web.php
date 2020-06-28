@@ -17,6 +17,7 @@ Route::get('/', function () {
     return view('welcome');
 });
 
+// Auth::routes(); 
 Auth::routes(['register' => false]); 
 // queste rotte private sono accesibili solo da utente autenticato (middleware('auth'),
     // hanno tutte l'url che comincia con 'admin'(prefix('admin')),

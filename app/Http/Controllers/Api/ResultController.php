@@ -49,13 +49,12 @@
 //     }
 // }
 
-
-// input examples:
-// GET     http://localhost:8000/api/HTTP/GET/
-// GET     http://localhost:8000/api/HTTP/GET/3
-// POST    http://localhost:8000/api/HTTP/POST/?method=post&url=github.com/Synchro/PHPMailer&domain=github.com/Synchro/PHPMailer&scheme=https&path=Synchro/PHPMailer&version=http2.0/&status=200&date="mon, 1 Jun 2020"&server=apache 7.4.13&location=null
-// PUT     http://localhost:8000/api/HTTP/put/5?version=HTTP1.1/&status=501
-// DELETE  http://localhost:8000/api/HTTP/delete/13
+// input examples (api_token parameter is mandatory):
+// GET     https://mysite.com/api/HTTP/GET/
+// GET     https://mysite.com/api/HTTP/GET/3
+// POST    https://mysite.com/api/HTTP/POST/?method=post&url=github.com/Synchro/PHPMailer&domain=github.com/Synchro/PHPMailer&scheme=https&path=Synchro/PHPMailer&version=http2.0/&status=200&date="mon, 1 Jun 2020"&server=apache 7.4.13&location=null
+// PUT     https://mysite.com/api/HTTP/put/5?version=HTTP1.1/&status=501
+// DELETE  https://mysite.com/api/HTTP/delete/13
 
 // NOTA PER IL DEBUG/TESTING: per mandare richieste con POSTMAN ad API che richiedono l'autenticazione, 
 // devo inserire, fra i parametri della richiesta api_token=il_mio_api_token
@@ -65,8 +64,7 @@
 // posso passarglielo direttamente come parametro (api_token)
 //
 
-
-
+// ---------------------------- END DOCUMENTATION ------------------------------------------------
 
 namespace App\Http\Controllers\Api;
 
