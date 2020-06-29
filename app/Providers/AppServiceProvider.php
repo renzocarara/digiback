@@ -23,6 +23,9 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        //
+        // aggiunto per forzare i link a https, solo in production
+        if (env('APP_ENV') !== 'local') {
+            $url->forseScheme('https');
+        }
     }
 }
