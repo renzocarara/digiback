@@ -3,6 +3,8 @@
 namespace App\Providers;
 
 use Illuminate\Support\ServiceProvider;
+use Illuminate\Support\Facades\URL;
+
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -25,7 +27,7 @@ class AppServiceProvider extends ServiceProvider
     {
         // aggiunto per forzare i link a https, solo in production
         if (env('APP_ENV') !== 'local') {
-            $url->forseScheme('https');
+            \URL::forceScheme('https');
         }
     }
 }
