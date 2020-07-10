@@ -85,7 +85,7 @@
 
             <div class="content">
                 <div class="title m-b-md">
-                    <img src="/assets/digi_logo_purple_on_trasp.png" alt="digiback logo">
+                    <img src="/assets/digi_logo.png" alt="digiback logo">
                     DigiBack
                 </div>
 

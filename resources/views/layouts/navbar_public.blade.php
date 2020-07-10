@@ -1,6 +1,6 @@
 <nav class="navbar navbar-expand-md navbar-light bg-white shadow-sm">
     <div class="container">
-        <img style="max-height:38px" class="mr-3" src="/assets/digi_logo_purple_on_trasp.png" alt="digiback logo">
+        <img style="max-height:38px" class="mr-3" src="/assets/digi_logo.png" alt="digiback logo">
         <a class="navbar-brand" href="{{ url('/') }}">
             {{ config('app.name', 'DigiBack') }}
         </a>
