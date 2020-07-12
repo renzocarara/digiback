@@ -78,7 +78,7 @@ class ResultController extends Controller
 
 {
 
-        public static function buildAPIResponse($record, $status, $error){
+        public static function buildAPIResponse($record){
 
             // costruisco un array da utilizzare poi come risposta dell'API
 
@@ -101,9 +101,7 @@ class ResultController extends Controller
             
             // creo la response da restituire
             $APIResponse = [
-                'status' => $status,
-                'errors' => (object) $error,   // con '(object)' trasformo il dato in un oggetto
-                'data' => ['url' => $data_url, 'response' => $data_response, 'request'=> $data_request]
+                'url' => $data_url, 'response' => $data_response, 'request'=> $data_request
             ];
 
             return $APIResponse;
@@ -118,13 +116,7 @@ class ResultController extends Controller
         $records = Result::all();
 
         // creo la risposta, ovvero un JSON da ritornare
-        return response()->json(
-            [
-            'status' => '200',
-            'errors' => (object)[],
-            'data' => $records    // NOTA: qui torno un array di oggetti, ogni oggetto è un singolo risultato
-            ]
-            );
+        return response()->json($records, 200);
         }
 
         public function show($id) {
@@ -137,18 +129,13 @@ class ResultController extends Controller
         // se l'ho trovato restituisco il risultato
         if($record) {
 
-            $APIResponse = $this->buildAPIResponse($record, "200", []);
-            return response()->json($APIResponse);
+            $APIResponse = $this->buildAPIResponse($record);
+            return response()->json($APIResponse, 200);
 
         } else {
             // il record richiesto non esiste, ritorno un una risposta che segnala l'errore
-            return response()->json(
-                [
-                'status' => '200',
-                'errors' => (object)['text' => 'Il risultato con id ' . $id . ' non esiste'],
-                'data' => (object)[],
-                ]
-            );
+            return response()->json((object)['errors' => 'No record with id: ' . $id . ' found'], 404);
+
         }
     }
 
@@ -166,9 +153,8 @@ class ResultController extends Controller
         // scrivo l'oggetto nel DB
         $new_record->save();
 
-        $APIResponse = $this->buildAPIResponse($new_record, "201", []);
-        return response()->json($APIResponse);
-
+        $APIResponse = $this->buildAPIResponse($new_record);
+        return response()->json($APIResponse, 201); 
     }
 
     public function update(Request $request, $id) {
@@ -186,18 +172,13 @@ class ResultController extends Controller
             // Laravel gestisce l'update() aggiornando solo i dati che riceve (come fosse una PATCH e non PUT)
             $record->update($new_record);
 
-            $APIResponse = $this->buildAPIResponse($record, "200", []);
-            return response()->json($APIResponse);
+            $APIResponse = $this->buildAPIResponse($record);
+            return response()->json($APIResponse, 200);
 
         } else {
-            // se non ho trovato il risultato richiesto all'interno del mio DB
-            return response()->json(
-                [
-                'status' => '200',
-                'errors' => (object)['text' => 'Il risultato con id ' . $id . ' non esiste'],
-                'data' => (object)[],
-                ]
-            );
+            // se non ho trovato il risultato da aggiornare all'interno del mio DB
+            return response()->json((object)['errors' => 'No record with id: ' . $id . ' found'], 404);
+
         }
     }
 
@@ -214,23 +195,13 @@ class ResultController extends Controller
             // cancello il post dal DB
             $record->delete();
 
-             return response()->json(
-                [
-                'status' => '200',
-                'errors' => (object)[],
-                'data' => (object)[]   //restituisco un oggetto vuoto
-                ]
-            );
+            return response()->json((object)[], 200); // restituisco un oggetto vuoto
+
         } else {
-            // se non ho trovato il risultato richiesto all'interno del mio DB 
+            // se non ho trovato il risultato da cancellare all'interno del mio DB 
             // rispondo con un messaggio d'errore
-            return response()->json(
-                [
-                'status' => '200',
-                'errors' => (object)['text' => 'Il risultato con id ' . $id . ' non esiste'],
-                'data' => (object)[],
-                ]
-            );
+            return response()->json((object)['errors' => 'No record with id: ' . $id . ' found'], 404);
+
         }
     }
 
