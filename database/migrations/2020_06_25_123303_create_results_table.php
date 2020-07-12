@@ -16,15 +16,15 @@ class CreateResultsTable extends Migration
         Schema::create('results', function (Blueprint $table) {
             $table->id();
             $table->string('method', 20);
-            $table->string('url',200);
-            $table->string('domain',200);
+            $table->string('url',255);
+            $table->string('domain',255);
             $table->string('scheme',20);
-            $table->string('path',100,);
-            $table->string('version',20)->nullable();
-            $table->unsignedSmallInteger('status');
+            $table->string('path',100,)->nullable();
+            $table->string('version',80);
+            $table->unsignedSmallInteger('status')->nullable();
             $table->string('date',50);
-            $table->string('server',50);
-            $table->string('location', 200)->nullable();
+            $table->string('server',100);
+            $table->string('location', 255)->nullable();
             $table->timestamps();
         });
     }
