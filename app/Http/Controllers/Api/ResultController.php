@@ -5,36 +5,26 @@
 // API methods: GET POST, PUT, DELETE, INFO, DUMB
 // API signature: /api/HTTP/{METHOD}/{?json}
 //
-//  GET     http://example.com/api/HTTP/GET                       get all records
-//  GET     http://example.com/api/HTTP/GET/{id}                  get a single record by id
-//  POST    http://example.com/api/HTTP/POST/                     create a new record
-//          ?method={string}
-//          &url={string}
-//          &domain={string}
-//          &scheme={string}
-//          &path={string}
-//          &version={string}
-//          &status={string}
-//          &date={string}
-//          &server={string}
-//          &location={string}
-// PUT      http://example.com/api/HTTP/PUT/{id}?{param=val&...}   modify a single record
-// DELETE   http://example.com/api/HTTP/DELETE/{id}                delete a single record
-// INFO     TBD
-// DUMB     TBD
+// GET     http://example.com/api/HTTP/GET                       get all records
+// GET     http://example.com/api/HTTP/GET/{id}                  get a single record by id
+// POST    http://example.com/api/HTTP/POST/                     create a new record
+// PUT     http://example.com/api/HTTP/PUT/{id}                  modify a single record
+// DELETE  http://example.com/api/HTTP/DELETE/{id}               delete a single record
+// INFO    TBD
+// DUMB    TBD
 
 
-// Output example:
+// Output example (success):
 // {
-//     "status": "200 OK",
-//     "errors": {},
+//     "status": "200",
 //     "data": {
+//            "id":"456",
 //            "url": {
 //                "url": "www.renzocarara.it/contatti.php"
 //            },
 //            "response": {
 //                "version": "http/1.1",
-//                "status": "200 ok",
+//                "status": "200",
 //                "date": "mon, 27 Jul 2009",
 //                "server": "Apache/2.2.14 (win32)",
 //                "location": "null"
@@ -43,25 +33,38 @@
 //                "method": "get",
 //                "url": "www.renzocarara.it/contatti.php",
 //                "domain": "renzocarara.it",
-//                "scheme": "http",
+//                "scheme": "https",
 //                "path": "contatti"
 //            }
 //     }
 // }
 
-// input examples (api_token parameter is mandatory):
-// GET     https://mysite.com/api/HTTP/GET/
-// GET     https://mysite.com/api/HTTP/GET/3
-// POST    https://mysite.com/api/HTTP/POST/?method=post&url=github.com/Synchro/PHPMailer&domain=github.com/Synchro/PHPMailer&scheme=https&path=Synchro/PHPMailer&version=http2.0/&status=200&date="mon, 1 Jun 2020"&server=apache 7.4.13&location=null
-// PUT     https://mysite.com/api/HTTP/put/5?version=HTTP1.1/&status=501
-// DELETE  https://mysite.com/api/HTTP/delete/13
+// Output example (error):
+// {
+//     "status": "404",
+//     "data": {
+//            "id":"457",
+//             "errors": {
+//                  "Resource not available"
+//             }   
+//     }
+// }
+//
+
+
+// input examples (api_token info is mandatory):
+// GET     https://heroku.app.com/digifront/api/HTTP/GET/
+// GET     https://heroku.app.com/digifront/api/HTTP/GET/3
+// POST    https://heroku.app.com/digifront/api/HTTP/POST/
+// PUT     https://heroku.app.com/digifront/api/HTTP/PUT/5
+// DELETE  https://heroku.app.com/digifront/api/HTTP/DELETE/13
 
 // NOTA PER IL DEBUG/TESTING: per mandare richieste con POSTMAN ad API che richiedono l'autenticazione, 
-// devo inserire, fra i parametri della richiesta api_token=il_mio_api_token
+// devo inserire api_token=il_mio_api_token
 // (l'api_token viene generato automaticamente per ogni utente che si registra sul sito)
 // Per inserirlo nella richiesta, in POSTMAN, devo selezionare la TAB: "AUTHORIZATION" e scegliere TYPE="Bearer Token" ed inserire
 // il token (stringa alfanumerica di 80chars) nel campo specifico. In alternativa, più semplicemente,
-// posso passarglielo direttamente come parametro (api_token)
+// posso passarglielo direttamente nella sezione params"
 //
 
 // ---------------------------- END DOCUMENTATION ------------------------------------------------
@@ -78,36 +81,36 @@ class ResultController extends Controller
 
 {
 
-        public static function buildAPIResponse($record){
+    public static function buildAPIResponse($record){
 
-            // costruisco un array da utilizzare poi come risposta dell'API
+        // costruisco un struttura da utilizzare poi come risposta dell'API
 
-            // accorpo i dati 
-            $data_request = [
-                'method' => $record->method,
-                'url' => $record->url,
-                'domain' => $record->domain,
-                'scheme' => $record->scheme,
-                'path' => $record->path];
-            // accorpo i dati 
-            $data_response = [
-                'version' =>$record->version,
-                'status' => $record->status,
-                'date' => $record->date,
-                'server' => $record->server,
-                'location' => $record->location];
+        // accorpo i dati 
+        $data_request = [
+            'method' => $record->method,
+            'url' => $record->url,
+            'domain' => $record->domain,
+            'scheme' => $record->scheme,
+            'path' => $record->path];
+        // accorpo i dati 
+        $data_response = [
+            'version' =>$record->version,
+            'status' => $record->status,
+            'date' => $record->date,
+            'server' => $record->server,
+            'location' => $record->location];
 
-            $data_url = (object) ['url' => $record->url];  // trasformo la stringa in un oggetto
-            
-            // creo la response da restituire
-            $APIResponse = [
-                'url' => $data_url, 'response' => $data_response, 'request'=> $data_request
-            ];
+        $data_url = (object) ['url' => $record->url];  // trasformo la stringa in un oggetto
+        
+        // assemblo la response da restituire, inserisco anche l'id del record
+        $APIResponse = [
+            'id' => $record->id, 'url' => $data_url, 'response' => $data_response, 'request'=> $data_request
+        ];
 
-            return $APIResponse;
-        }
+        return $APIResponse;
+    }
 
-        public function index() {
+    public function index() {
         // ESEMPIO: "http://example.com/api/HTTP/GET"
         // richiedo l'elenco completo di tutti i risultati
         // metodo GET
@@ -115,11 +118,24 @@ class ResultController extends Controller
         // leggo tutta la tabella 'results'
         $records = Result::all();
 
-        // creo la risposta, ovvero un JSON da ritornare
-        return response()->json($records, 200);
-        }
+        if ($records) {
+            // creo un array con tutti i record formattati come da specifica
+            $formatted_records=[]; 
+            foreach ($records as $record) {
+                $APIResponse = $this->buildAPIResponse($record);
+                array_push($formatted_records, $APIResponse);
+            }   
+            // creo la risposta, ovvero un JSON da ritornare
+            return response()->json($formatted_records, 200);
 
-        public function show($id) {
+        } else{
+            // non ci sono records nel DB, ritorno un oggetto vuoto
+            return response()->json((object)[], 200);
+            
+        }
+    }
+
+    public function show($id) {
         // ESEMPIO: "http://example.com/api/HTTP/GET/44"
         // richiedo il risultato con id=44
         // metodo GET
@@ -134,13 +150,12 @@ class ResultController extends Controller
 
         } else {
             // il record richiesto non esiste, ritorno un una risposta che segnala l'errore
-            return response()->json((object)['errors' => 'No record with id: ' . $id . ' found'], 404);
-
+            return response()->json((object)['id' => $id, 'errors' => 'No record with id: ' . $id . ' found'], 404);
         }
     }
 
     public function store(Request $request) {
-        // ESEMPIO: http://example.com/api/HTTP/POST/?param1=xxxx&param2=yyyyyyy&param3=zzzzz....etc
+        // ESEMPIO: http://example.com/api/HTTP/POST/
         // richiedo di memorizzare un nuovo risultato
         // metodo POST
 
@@ -151,14 +166,21 @@ class ResultController extends Controller
         // valorizzo il nuovo oggetto
         $new_record->fill($data_received);
         // scrivo l'oggetto nel DB
-        $new_record->save();
+        $is_saved = $new_record->save();
+        if ($is_saved) {
+            // la scrittura nel DB è andata bene, costruisco la response da ritornare
+            $APIResponse = $this->buildAPIResponse($new_record);
+            $response = response()->json($APIResponse, 201);
+        } else {
+            // il salvataggio nel DB non è riuscito  
+            $response = response()->json((object)['id' => '', 'errors' => 'No data saved in DB!'], 500);
+        }
 
-        $APIResponse = $this->buildAPIResponse($new_record);
-        return response()->json($APIResponse, 201); 
+        return  $response;
     }
 
     public function update(Request $request, $id) {
-        // ESEMPIO: http://example.com/api/HTTP/PUT/45?version=http2.0/
+        // ESEMPIO: http://example.com/api/HTTP/PUT/45
         // aggiorno il campo 'version' del risultato con id=45
         // metodo PUT
 
@@ -170,14 +192,22 @@ class ResultController extends Controller
             $new_record = $request->all();
             // aggiorno i dati del risultato scrivendo nel DB
             // Laravel gestisce l'update() aggiornando solo i dati che riceve (come fosse una PATCH e non PUT)
-            $record->update($new_record);
+            $is_updated = $record->update($new_record);
 
-            $APIResponse = $this->buildAPIResponse($record);
-            return response()->json($APIResponse, 200);
+            if ($is_updated) {
+                // l'aggiornamento del DB è andato bene, costruisco la response da ritornare
+                $APIResponse = $this->buildAPIResponse($record);
+                $response = response()->json($APIResponse, 200);
+            } else {
+              // l'aggiornamento del DB non è riuscito  
+              $response = response()->json((object)['id' => $id, 'errors' => 'No data updated in DB!'], 500);
+            }
+
+            return  $response;
 
         } else {
             // se non ho trovato il risultato da aggiornare all'interno del mio DB
-            return response()->json((object)['errors' => 'No record with id: ' . $id . ' found'], 404);
+            return response()->json((object)['id' => $id, 'errors' => 'No record with id: ' . $id . ' found'], 404);
 
         }
     }
@@ -193,14 +223,21 @@ class ResultController extends Controller
         if($record) {
 
             // cancello il post dal DB
-            $record->delete();
+            $is_deleted = $record->delete();
 
-            return response()->json((object)[], 200); // restituisco un oggetto vuoto
+            if ($is_deleted) {
+                // la cancellazione dal DB è andata bene, costruisco la response da ritornare
+                $response = response()->json((object)[], 200);
+            } else {
+                // la cancellazione dal DB non è riuscita 
+                $response = response()->json((object)['id' => $id, 'errors' => 'Delete failed!'], 500);
+            }
+
+            return $response;
 
         } else {
-            // se non ho trovato il risultato da cancellare all'interno del mio DB 
-            // rispondo con un messaggio d'errore
-            return response()->json((object)['errors' => 'No record with id: ' . $id . ' found'], 404);
+            // non c'è il record da cancellare all'interno del mio DB 
+            return response()->json((object)['id' => $id, 'errors' => 'No record with id: ' . $id . ' found'], 404);
 
         }
     }
