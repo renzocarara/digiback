@@ -23,7 +23,7 @@
 //                "url": "www.renzocarara.it/contatti.php"
 //            },
 //            "response": {
-//                "version": "http/1.1",
+//                "statusline": "http/1.1 200 OK",
 //                "status": "200",
 //                "date": "mon, 27 Jul 2009",
 //                "server": "Apache/2.2.14 (win32)",
@@ -94,7 +94,7 @@ class ResultController extends Controller
             'path' => $record->path];
         // accorpo i dati 
         $data_response = [
-            'version' =>$record->version,
+            'statusline' =>$record->statusline,
             'status' => $record->status,
             'date' => $record->date,
             'server' => $record->server,
@@ -115,8 +115,9 @@ class ResultController extends Controller
         // richiedo l'elenco completo di tutti i risultati
         // metodo GET
 
-        // leggo tutta la tabella 'results'
-        $records = Result::all();
+        // leggo tutta la tabella 'results', e la ordino per "id"
+        // $records = Result::all();
+        $records = Result::orderBy('id', 'ASC')->get();
 
         if ($records) {
             // creo un array con tutti i record formattati come da specifica
@@ -181,7 +182,7 @@ class ResultController extends Controller
 
     public function update(Request $request, $id) {
         // ESEMPIO: http://example.com/api/HTTP/PUT/45
-        // aggiorno il campo 'version' del risultato con id=45
+        // aggiorno il risultato con id=45
         // metodo PUT
 
         // recupero il risultato che l'utente vuole modificare

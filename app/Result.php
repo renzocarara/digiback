@@ -10,7 +10,7 @@ class Result extends Model
     // cioè quando utilizzo il metodo fill(), Laravel automaticamente mi copia nel mio
     // oggetto (che è poi un record) che va scritto nel DB, i campi(colonne) che
     // nella tabella del DB hanno quel nome
-    protected $fillable=['method', 'url', 'domain', 'scheme', 'path', 'version', 'status', 'date', 'server', 'location'];
+    protected $fillable=['method', 'url', 'domain', 'scheme', 'path', 'statusline', 'status', 'date', 'server', 'location'];
 
 
 }

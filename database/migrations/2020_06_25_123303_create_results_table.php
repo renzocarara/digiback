@@ -20,7 +20,7 @@ class CreateResultsTable extends Migration
             $table->string('domain',255);
             $table->string('scheme',20);
             $table->string('path',100,)->nullable();
-            $table->string('version',80);
+            $table->string('statusline',80);
             $table->unsignedSmallInteger('status')->nullable();
             $table->string('date',50);
             $table->string('server',100);
