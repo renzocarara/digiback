@@ -110,6 +110,17 @@ class ResultController extends Controller
         return $APIResponse;
     }
 
+    public static function wholeResponse($data, $status_code) {
+
+        date_default_timezone_set("CET");
+
+        return response()->json($data, $status_code)->withHeaders([
+                'Content-Type' => 'application/json',
+                'date' => date("l, d m Y h:i:s CET"),
+                'server' => 'Heroku'
+            ]);
+    }
+
     public function index() {
         // ESEMPIO: "http://example.com/api/HTTP/GET"
         // richiedo l'elenco completo di tutti i risultati
@@ -127,11 +138,11 @@ class ResultController extends Controller
                 array_push($formatted_records, $APIResponse);
             }   
             // creo la risposta, ovvero un JSON da ritornare
-            return response()->json($formatted_records, 200);
+            return wholeResponse($formatted_records, 200);
 
         } else{
             // non ci sono records nel DB, ritorno un oggetto vuoto
-            return response()->json((object)[], 200);
+            return wholeResponse((object)[], 200);
             
         }
     }
@@ -147,11 +158,11 @@ class ResultController extends Controller
         if($record) {
 
             $APIResponse = $this->buildAPIResponse($record);
-            return response()->json($APIResponse, 200);
+            return wholeResponse($APIResponse, 200);
 
         } else {
             // il record richiesto non esiste, ritorno un una risposta che segnala l'errore
-            return response()->json((object)['id' => $id, 'errors' => 'No record with id: ' . $id . ' found'], 404);
+            return wholeResponse((object)['id' => $id, 'errors' => 'No record with id: ' . $id . ' found'], 404);
         }
     }
 
@@ -171,10 +182,10 @@ class ResultController extends Controller
         if ($is_saved) {
             // la scrittura nel DB è andata bene, costruisco la response da ritornare
             $APIResponse = $this->buildAPIResponse($new_record);
-            $response = response()->json($APIResponse, 201);
+            $response = wholeResponse($APIResponse, 201);
         } else {
             // il salvataggio nel DB non è riuscito  
-            $response = response()->json((object)['id' => '', 'errors' => 'No data saved in DB!'], 500);
+            $response = wholeResponse((object)['id' => '', 'errors' => 'No data saved in DB!'], 500);
         }
 
         return  $response;
@@ -198,17 +209,17 @@ class ResultController extends Controller
             if ($is_updated) {
                 // l'aggiornamento del DB è andato bene, costruisco la response da ritornare
                 $APIResponse = $this->buildAPIResponse($record);
-                $response = response()->json($APIResponse, 200);
+                $response = wholeResponse($APIResponse, 200);
             } else {
               // l'aggiornamento del DB non è riuscito  
-              $response = response()->json((object)['id' => $id, 'errors' => 'No data updated in DB!'], 500);
+              $response = wholeResponse((object)['id' => $id, 'errors' => 'No data updated in DB!'], 500);
             }
 
             return  $response;
 
         } else {
             // se non ho trovato il risultato da aggiornare all'interno del mio DB
-            return response()->json((object)['id' => $id, 'errors' => 'No record with id: ' . $id . ' found'], 404);
+            return wholeResponse((object)['id' => $id, 'errors' => 'No record with id: ' . $id . ' found'], 404);
 
         }
     }
@@ -228,17 +239,17 @@ class ResultController extends Controller
 
             if ($is_deleted) {
                 // la cancellazione dal DB è andata bene, costruisco la response da ritornare
-                $response = response()->json((object)[], 200);
+                $response = wholeResponse((object)[], 200);
             } else {
                 // la cancellazione dal DB non è riuscita 
-                $response = response()->json((object)['id' => $id, 'errors' => 'Delete failed!'], 500);
+                $response = wholeResponse((object)['id' => $id, 'errors' => 'Delete failed!'], 500);
             }
 
             return $response;
 
         } else {
             // non c'è il record da cancellare all'interno del mio DB 
-            return response()->json((object)['id' => $id, 'errors' => 'No record with id: ' . $id . ' found'], 404);
+            return wholeResponse((object)['id' => $id, 'errors' => 'No record with id: ' . $id . ' found'], 404);
 
         }
     }
