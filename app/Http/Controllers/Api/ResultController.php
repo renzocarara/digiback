@@ -112,19 +112,10 @@ class ResultController extends Controller
 
     public static function wholeResponse($data, $status_code) {
 
-        // date_default_timezone_set("CET");
-
-        // return response()->json($data, $status_code)->withHeaders([
-        //         'Access-Control-Expose-Headers', '*',
-        //         'Content-Type' => 'application/json',
-        //         'datetime' => date("l, d m Y H:i:s"),
-        //         'server' => 'Heroku'
-        //     ]);
         return response()->json($data, $status_code)
         ->header('Access-Control-Expose-Headers', '*')
-        // ->header('Content-Type', 'application/json');
+        ->header('Content-Type', 'application/json')
         ->header('server', 'Heroku');
-        // ->header('date', date("l, d m Y H:i:s"))
             
     }
 
