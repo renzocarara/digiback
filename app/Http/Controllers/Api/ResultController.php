@@ -115,7 +115,7 @@ class ResultController extends Controller
         return response()->json($data, $status_code)
         ->header('Access-Control-Expose-Headers', '*')  // rendo disponibili nella response tutti gli headers
         ->header('Content-Type', 'application/json')
-        ->header('server', 'Heroku');
+        ->header('server', 'Apache');
             
     }
 
