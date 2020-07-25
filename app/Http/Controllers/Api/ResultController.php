@@ -46,7 +46,7 @@
 //            "id":"457",
 //             "errors": {
 //                  "Resource not available"
-//             }   
+//             }
 //     }
 // }
 //
@@ -59,7 +59,7 @@
 // PUT     https://heroku.app.com/digifront/api/HTTP/PUT/5
 // DELETE  https://heroku.app.com/digifront/api/HTTP/DELETE/13
 
-// NOTA PER IL DEBUG/TESTING: per mandare richieste con POSTMAN ad API che richiedono l'autenticazione, 
+// NOTA PER IL DEBUG/TESTING: per mandare richieste con POSTMAN ad API che richiedono l'autenticazione,
 // devo inserire api_token=il_mio_api_token
 // (l'api_token viene generato automaticamente per ogni utente che si registra sul sito)
 // Per inserirlo nella richiesta, in POSTMAN, devo selezionare la TAB: "AUTHORIZATION" e scegliere TYPE="Bearer Token" ed inserire
@@ -81,18 +81,18 @@ class ResultController extends Controller
 
 {
 
-    public static function buildAPIResponse($record){
+    public static function buildDataForResponse($record){
 
         // costruisco un struttura da utilizzare poi come risposta dell'API
 
-        // accorpo i dati 
+        // accorpo i dati
         $data_request = [
             'method' => $record->method,
             'url' => $record->url,
             'domain' => $record->domain,
             'scheme' => $record->scheme,
             'path' => $record->path];
-        // accorpo i dati 
+        // accorpo i dati
         $data_response = [
             'statusline' =>$record->statusline,
             'status' => $record->status,
@@ -101,22 +101,22 @@ class ResultController extends Controller
             'location' => $record->location];
 
         $data_url = (object) ['url' => $record->url];  // trasformo la stringa in un oggetto
-        
+
         // assemblo la response da restituire, inserisco anche l'id del record
-        $APIResponse = [
+        $response_data = [
             'id' => $record->id, 'url' => $data_url, 'response' => $data_response, 'request'=> $data_request
         ];
 
-        return $APIResponse;
+        return $response_data;
     }
 
-    public static function wholeResponse($data, $status_code) {
+    public static function buildResponse($data, $status_code) {
 
         return response()->json($data, $status_code)
         ->header('Access-Control-Expose-Headers', '*')  // rendo disponibili nella response tutti gli headers
         ->header('Content-Type', 'application/json')
         ->header('server', 'Apache');
-            
+
     }
 
     public function index() {
@@ -130,18 +130,18 @@ class ResultController extends Controller
 
         if ($records) {
             // creo un array con tutti i record formattati come da specifica
-            $formatted_records=[]; 
+            $formatted_records=[];
             foreach ($records as $record) {
-                $APIResponse = $this->buildAPIResponse($record);
-                array_push($formatted_records, $APIResponse);
-            }   
+                $response_data = $this->buildDataForResponse($record);
+                array_push($formatted_records, $response_data);
+            }
             // creo la risposta, ovvero un JSON da ritornare
-            return $this->wholeResponse($formatted_records, 200);
+            return $this->buildResponse($formatted_records, 200);
 
         } else{
             // non ci sono records nel DB, ritorno un oggetto vuoto
-            return $this->wholeResponse((object)[], 200);
-            
+            return $this->buildResponse((object)[], 200);
+
         }
     }
 
@@ -155,12 +155,12 @@ class ResultController extends Controller
         // se l'ho trovato restituisco il risultato
         if($record) {
 
-            $APIResponse = $this->buildAPIResponse($record);
-            return $this->wholeResponse($APIResponse, 200);
+            $response_data = $this->buildDataForResponse($record);
+            return $this->buildResponse($response_data, 200);
 
         } else {
             // il record richiesto non esiste, ritorno un una risposta che segnala l'errore
-            return $this->wholeResponse((object)['id' => $id, 'errors' => 'No record with id: ' . $id . ' found'], 404);
+            return $this->buildResponse((object)['id' => $id, 'errors' => 'No record with id: ' . $id . ' found'], 404);
         }
     }
 
@@ -179,11 +179,11 @@ class ResultController extends Controller
         $is_saved = $new_record->save();
         if ($is_saved) {
             // la scrittura nel DB è andata bene, costruisco la response da ritornare
-            $APIResponse = $this->buildAPIResponse($new_record);
-            $response = $this->wholeResponse($APIResponse, 201);
+            $response_data = $this->buildDataForResponse($new_record);
+            $response = $this->buildResponse($response_data, 201);
         } else {
-            // il salvataggio nel DB non è riuscito  
-            $response = $this->wholeResponse((object)['id' => '', 'errors' => 'No data saved in DB!'], 500);
+            // il salvataggio nel DB non è riuscito
+            $response = $this->buildResponse((object)['id' => '', 'errors' => 'No data saved in DB!'], 500);
         }
 
         return  $response;
@@ -206,18 +206,18 @@ class ResultController extends Controller
 
             if ($is_updated) {
                 // l'aggiornamento del DB è andato bene, costruisco la response da ritornare
-                $APIResponse = $this->buildAPIResponse($record);
-                $response = $this->wholeResponse($APIResponse, 200);
+                $response_data = $this->buildDataForResponse($record);
+                $response = $this->buildResponse($response_data, 200);
             } else {
-              // l'aggiornamento del DB non è riuscito  
-              $response = $this->wholeResponse((object)['id' => $id, 'errors' => 'No data updated in DB!'], 500);
+              // l'aggiornamento del DB non è riuscito
+              $response = $this->buildResponse((object)['id' => $id, 'errors' => 'No data updated in DB!'], 500);
             }
 
             return  $response;
 
         } else {
             // se non ho trovato il risultato da aggiornare all'interno del mio DB
-            return $this->wholeResponse((object)['id' => $id, 'errors' => 'No record with id: ' . $id . ' found'], 404);
+            return $this->buildResponse((object)['id' => $id, 'errors' => 'No record with id: ' . $id . ' found'], 404);
 
         }
     }
@@ -237,21 +237,19 @@ class ResultController extends Controller
 
             if ($is_deleted) {
                 // la cancellazione dal DB è andata bene, costruisco la response da ritornare
-                $response = $this->wholeResponse((object)[], 200);
+                $response = $this->buildResponse((object)[], 200);
             } else {
-                // la cancellazione dal DB non è riuscita 
-                $response = $this->wholeResponse((object)['id' => $id, 'errors' => 'Delete failed!'], 500);
+                // la cancellazione dal DB non è riuscita
+                $response = $this->buildResponse((object)['id' => $id, 'errors' => 'Delete failed!'], 500);
             }
 
             return $response;
 
         } else {
-            // non c'è il record da cancellare all'interno del mio DB 
-            return $this->wholeResponse((object)['id' => $id, 'errors' => 'No record with id: ' . $id . ' found'], 404);
+            // non c'è il record da cancellare all'interno del mio DB
+            return $this->buildResponse((object)['id' => $id, 'errors' => 'No record with id: ' . $id . ' found'], 404);
 
         }
     }
 
 }
-
-
