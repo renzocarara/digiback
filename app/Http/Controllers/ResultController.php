@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Result;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+
 
 class ResultController extends Controller
 {   /**
@@ -23,13 +25,14 @@ class ResultController extends Controller
      */
     public function index()
     {
-        // lego yuyyo il DB
+        // lego tutto il DB
         $allResults = Result::all();
+
         // conto le righe della tabella
         $total_number_of_results = $allResults->count();
 
-        // imposto la paginazione automatica di Laravel - 5 elementi per pagina
-        $allResults = Result::paginate(5);
+        // imposto la paginazione automatica di Laravel - 5 elementi per pagina, e li ordino in maniera crescente per 'id'
+        $allResults = Result::orderBy('id', 'asc')->paginate(5);
 
         // ritorno una view con con una collection di risultati da visualizzare e la quantità
         return view('index', ['results' => $allResults, 'total_results' => $total_number_of_results]);
